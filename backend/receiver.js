@@ -4,7 +4,9 @@ const ipAddress = 'localhost'; // Change this to the server's IP address if need
 const port = 8080;
 
 // Connect to the WebSocket server
-const socket = new WebSocket(`ws://${ipAddress}:${port}`);
+// const socket = new WebSocket(`ws://${ipAddress}:${port}`);
+console.log('connecting');
+const socket = new WebSocket('wss://cs29-mushroom-lamp-backend.onrender.com');
 
 // Function to decode binary data to a string
 function decodeMessage(message) {
