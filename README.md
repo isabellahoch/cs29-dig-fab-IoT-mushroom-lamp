@@ -2,6 +2,23 @@
 
 This repository contains a fun WebSocket-based application that allows clients control the state of a 3D-printed mushroom lamp equipped with an LED strip. By connecting to the WebSocket server, you can interact with the lamp remotely and toggle the light ON/OFF in real-time. This was my first attempt at creating my own IoT device and framework.
 
+
+## Deployment 🚀
+
+Here are the deployment URLs for both the frontend and backend:
+
+### Frontend (Hosted on Render)
+
+The frontend React app is hosted on Render and accessible at the following URL:
+- [https://cs29-mushroom-lamp.onrender.com](https://cs29-mushroom-lamp.onrender.com)
+- Shortcut URL: [dartgo.org/lamp](https://dartgo.org/lamp)
+
+### Backend (Hosted on Render)
+
+The WebSocket server backend is hosted on Render as a web service and accessible at the following URL:
+- [https://cs29-mushroom-lamp-backend.onrender.com](https://cs29-mushroom-lamp-backend.onrender.com)
+
+
 ## Xiao ESP32C3 & LED Strip 💡
 
 The real magic happens with the Xiao ESP32C3 microcontroller, which is the heart of the 70s-inspired mushroom lamp. The microcontroller communicates with the WebSocket server over the network and accurately follows the user's light toggling commands. The LED strip inside the 3D-printed mushroom lamp changes its brightness according to the user's preferences, allowing the ability for greater control.
