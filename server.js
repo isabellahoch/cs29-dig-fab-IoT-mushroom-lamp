@@ -11,9 +11,16 @@ let interval;
 // Parse incoming JSON requests
 app.use(bodyParser.json());
 
+// Function to decode binary data to a string
+function decodeMessage(message) {
+  return Buffer.from(message).toString('utf8');
+}
+
 // POST route to change the ledState variable based on request payload
 app.post('/api/toggleLed', (req, res) => {
+  console.log('POST!!');
   const { state } = req.body;
+  console.log(state);
 
   if (typeof state === 'boolean') {
     ledState = state;
