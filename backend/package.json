@@ -4,8 +4,7 @@
     "description": "Custom WebSocket server for controlling LED on ESP8266",
     "main": "server.js",
     "scripts": {
-        "start": "node server.js",
-        "client": "node client.js"
+        "start": "node server.js"
     },
     "author": "Isabella Hochschild",
     "license": "MIT",
