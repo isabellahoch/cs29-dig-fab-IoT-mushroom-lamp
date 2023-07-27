@@ -1,6 +1,6 @@
 # Mushroom Lamp Control with WebSockets & XIAO ESP32C3 🍄🌟
 
-This repository contains a fun WebSocket-based application that allows clients control the state of a 3D-printed mushroom lamp equipped with an LED strip. By connecting to the WebSocket server, you can interact with the lamp remotely and toggle the light ON/OFF in real-time. This was my first attempt at creating my own IoT device and framework.
+This repository contains a WebSocket-based application that allows clients to control the state of a 3D-printed mushroom lamp equipped with an LED strip. By connecting to the WebSocket server, you can interact with the lamp remotely and toggle the light ON/OFF in real-time. This was my first attempt at creating my own IoT device and framework.
 
 
 ## Deployment 🚀
