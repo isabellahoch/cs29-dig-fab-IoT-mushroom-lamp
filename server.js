@@ -1,65 +1,47 @@
 const WebSocket = require('ws');
-const express = require('express');
-const bodyParser = require('body-parser');
 
-const app = express();
-const wss = new WebSocket.Server({ port: 8080 }); // Change the port if needed
+// Create a WebSocket server instance
+const wss = new WebSocket.Server({ port: 8080 });
 
-let ledState = false;
-let interval;
+let connectedClients = [];
 
-// Parse incoming JSON requests
-app.use(bodyParser.json());
+// Function to broadcast a message to all connected clients
+function broadcastMessage(message) {
+  connectedClients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
 
 // Function to decode binary data to a string
 function decodeMessage(message) {
-  return Buffer.from(message).toString('utf8');
+    return Buffer.from(message).toString('utf8');
 }
 
-// POST route to change the ledState variable based on request payload
-app.post('/api/toggleLed', (req, res) => {
-  console.log('POST!!');
-  const { state } = req.body;
-  console.log(state);
 
-  if (typeof state === 'boolean') {
-    ledState = state;
-    res.status(200).json({ message: 'LED state changed successfully.' });
-  } else {
-    res.status(400).json({ error: 'Invalid request payload. "state" must be a boolean.' });
-  }
-});
-
+// Event: when a client connects to the server
 wss.on('connection', (ws) => {
-  console.log('Client connected');
+  console.log('New client connected');
+  connectedClients.push(ws);
 
-  // Start sending messages to the client every 2 seconds
-  interval = setInterval(() => {
-    console.log("ledState", ledState);
-    ws.send(ledState ? 'ON' : 'OFF');
-  }, 2000);
-
-
-  // Listen to incoming messages from clients
+  // Event: when the server receives a message from a client
   ws.on('message', (message) => {
-    console.log('Received message:', message);
-    // You can process the message here and take actions accordingly
+    const decodedMessage = decodeMessage(message);
+    console.log('Received message from a client:', decodedMessage);
+    broadcastMessage(message);
   });
 
-  // Send initial message to clients on connection (optional)
-  ws.send('WebSocket connected');
+  // Event: when a client disconnects
+  ws.on('close', () => {
+    console.log('Client disconnected');
+    connectedClients = connectedClients.filter((client) => client !== ws);
+  });
 
+  // Event: when an error occurs
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
 });
 
-
-
-
-
-// Gracefully handle server shutdown
-process.on('SIGINT', () => {
-    clearInterval(interval);
-    wss.close(() => {
-      console.log('WebSocket server closed');
-      process.exit(0);
-    });
-  });
+console.log('WebSocket server started on port 8080');
