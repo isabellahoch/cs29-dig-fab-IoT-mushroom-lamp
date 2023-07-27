@@ -1,0 +1,15 @@
+{
+    "name": "websocket-server",
+    "version": "1.0.0",
+    "description": "Custom WebSocket server for controlling LED on ESP8266",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "author": "Isabella Hochschild",
+    "license": "MIT",
+    "dependencies": {
+      "ws": "^8.5.0"
+    }
+  }
+  
