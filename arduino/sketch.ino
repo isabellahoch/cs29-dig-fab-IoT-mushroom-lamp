@@ -5,8 +5,8 @@
 #define NUM_LEDS 30 // Number of LED's in your strip. Adjust accordingly.
 #define DATA_PIN D10 // The pin where your data line is connected.
 
-const char* ssid = "dalilab";
-const char* password = "helvetica";
+const char* ssid = "<>";
+const char* password = "<>";
 
 // Define the array of leds
 CRGB leds[NUM_LEDS];
