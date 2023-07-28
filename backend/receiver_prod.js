@@ -6,8 +6,8 @@ const port = 8080;
 // Connect to the WebSocket server
 // const socket = new WebSocket(`ws://${ipAddress}:${port}`);
 console.log('connecting');
-const socket = new WebSocket('ws://localhost:8080'); // local
-// const socket = new WebSocket('wss://cs29-mushroom-lamp-backend.onrender.com'); // prod
+// const socket = new WebSocket('ws://localhost:8080'); // local
+const socket = new WebSocket('wss://cs29-mushroom-lamp-backend.onrender.com'); // prod
 
 
 // Function to decode binary data to a string

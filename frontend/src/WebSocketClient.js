@@ -6,8 +6,8 @@ const WebSocketClient = ({ isLightOn }) => {
 
   useEffect(() => {
     // Create a new WebSocket connection
-    // const socket = new WebSocket('ws://localhost:8080'); // local
-    const socket = new WebSocket('wss://cs29-mushroom-lamp-backend.onrender.com'); // production
+    const socket = new WebSocket('ws://localhost:8080'); // local
+    // const socket = new WebSocket('wss://cs29-mushroom-lamp-backend.onrender.com'); // production
 
     socketRef.current = socket;
 
