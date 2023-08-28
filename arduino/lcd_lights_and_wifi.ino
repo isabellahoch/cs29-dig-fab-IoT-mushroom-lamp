@@ -5,16 +5,10 @@
 #include <Adafruit_SSD1306.h>
 #include <FastLED.h>
 #include <WiFi.h>
-#include <ArduinoWebsockets.h>
 
-// Define Wi-Fi credentials
-const char* ssid = "";
-const char* password = "";
-
-// Define server credentials (including port)
-const char* webSocketServerUri = "ws://192.168.1.55:8080";
-
-using namespace websockets;
+// Define Wi-Fi Info
+const char* ssid = "dalilab";
+const char* password = "helvetica";
 
 // Define LED info
 #define NUM_LEDS 120 // Number of LED's in your strip. Adjust accordingly.
@@ -46,9 +40,7 @@ CRGB leds[NUM_LEDS];
 
 static uint8_t hue = 0;
 
-bool isLightOn = true; // Boolean variable to track the light's on/off status, initially set to FALSE.
-
-char mostRecentMessage[100];
+bool isLightOn = false; // Boolean variable to track the light's on/off status, initially set to FALSE.
 
 // Array of pretty colors in CHSV format (Hue, Saturation, Value)
 const CRGBPalette16 pastelColorsPalette = CRGBPalette16(
@@ -59,7 +51,7 @@ const CRGBPalette16 pastelColorsPalette = CRGBPalette16(
 );
 
 void connectToWiFi() {
-  String wifiMessage = "Connecting to Wi-Fi";
+  String wifiMessage = "Connecting to Wi-Fi...";
   Serial.print("Connecting to Wi-Fi");
   WiFi.begin(ssid, password);
 
@@ -84,30 +76,6 @@ void connectToWiFi() {
   displayTeleprompterText(wifiConfirmationMessage, 25);
 
 }
-
-void onMessageCallback(WebsocketsMessage message) {
-  didReceiveMessage = true;
-  Serial.print("Got Message: ");
-  Serial.println(message.data());
-  sprintf(mostRecentMessage, "Received Message:\n\n %s", message.data());
-
-  if (message.data() == "ON") {
-    isLightOn = true;
-  } else if (message.data() == "OFF") {
-    isLightOn = false;
-  }
-}
-
-void onEventsCallback(WebsocketsEvent event, String data) {
-  Serial.println("event callback!");
-  if(event == WebsocketsEvent::ConnectionOpened) {
-    Serial.println("Connnection Opened");
-  } else if(event == WebsocketsEvent::ConnectionClosed) {
-    Serial.println("Connnection Closed");
-  }
-}
-
-WebsocketsClient client;
 
 // Define custom bitmap for a mushroom created using custom digital drawing and https://manytools.org/hacker-tools/image-to-byte-array/go/
 static const unsigned char PROGMEM mushroom_bmp[] = {
@@ -172,6 +140,7 @@ void shuffleArrayLeft(char arr[MAX_MESSAGES][20], int size) {
     strcpy(arr[size - 1], temp); // Place the temporarily stored element at the end
 }
 
+
 // Function to display text like a teleprompter
 void displayTeleprompterText(const char *text, int scrollSpeed) {
   display.clearDisplay();
@@ -207,6 +176,7 @@ String getNextMessage() {
 
   return nextMessage;
 }
+
 
 void displayMessages(int scrollSpeed) {
   display.setTextSize(1);
@@ -320,52 +290,45 @@ void setup() {
 
   // connect to wifi
   connectToWiFi();
-
-  // set up callbacks
-  client.onMessage(onMessageCallback);
-  client.onEvent(onEventsCallback);
-  
-  Serial.println("connecting to server.......");
-  // Connect to server
-
-  client.connect(webSocketServerUri);
-
-  char serverConfirmationMessage[100];
-  sprintf(serverConfirmationMessage, "Connected to server at IP address:\n\n %s", webSocketServerUri);
-  displayTeleprompterText(serverConfirmationMessage, 25);
 }
 
 void loop() {
-  client.poll();
   // Clear the display
   display.clearDisplay();
 
-  if(isLightOn) {
-    // "Waterfall" effect: each LED takes on the next color in the cycle
-    for(int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = CHSV((hue+i)%180, 180, 180); // Add 'i' to the hue to make each LED a different color (changed to 180 from 255 for softer feel)
-    }
-  }
-  else {
-    for(int i = 0; i < NUM_LEDS; i++) {
-      leds[i] = CHSV(0,0,0);
-    }
+  // "Waterfall" effect: each LED takes on the next color in the cycle
+  for(int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = CHSV((hue+i)%180, 180, 180); // Add 'i' to the hue to make each LED a different color (changed to 180 from 255 for softer feel)
   }
 
   FastLED.show();
 
-  if(didReceiveMessage) {
-    // print message
-    displayTeleprompterText(mostRecentMessage, 10);
-    // reset message
-    didReceiveMessage = false;
-  }
-  else {
-    // show mushroom!
-    displayMushroomImage(0);
+  shuffleArrayLeft(messages, MAX_MESSAGES);
+
+  String newMessage = getNextMessage();
+  didReceiveMessage = true;
+  displayTeleprompterText(newMessage.c_str(), 25);
+
+  if(!didReceiveMessage) {
+    delay(500);
   }
 
   hue++;
+  // Display a teleprompter-like text
+  // displayTeleprompterText("Welcome to My Mushroom Lamp Animation!", 100);
 
-  delay(500);
+  // // Clear the display
+  // display.clearDisplay();
+  
+
+  // Clear the display
+  // display.clearDisplay();
+
+  // Display a nature scene animation
+  // testanimate(mushroom_mbp, LOGO_WIDTH, LOGO_HEIGHT);
+
+  // Clear the display
+  // display.clearDisplay();
 }
+
+// Rest of the code remains the same

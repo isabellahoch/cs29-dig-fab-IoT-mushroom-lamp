@@ -3,7 +3,7 @@ import './App.css';
 import WebSocketClient from './WebSocketClient';
 
 function App() {
-  const [isLightOn, setLightOn] = useState(false);
+  const [isLightOn, setLightOn] = useState(true);
 
   // Function to handle the button click and toggle the light status
   const handleToggleLight = () => {
